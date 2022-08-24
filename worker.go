@@ -23,6 +23,7 @@ type WorkerConfig struct {
 	MaxWait         time.Duration
 	BackoffDelay    time.Duration
 	MaxBackoffDelay time.Duration
+	MaxProcessTime  time.Duration
 }
 
 type kafkaWorker struct {
@@ -160,6 +161,10 @@ func NewKafkaWorker(workerConfig WorkerConfig, handlers ...handler.Handler) *kaf
 		workerConfig.BatchSize = 100
 	}
 
+	if workerConfig.MaxProcessTime <= 0 {
+		workerConfig.MaxProcessTime = 30 * time.Second
+	}
+
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:                workerConfig.KafkaBrokers,
 		GroupID:                workerConfig.WorkerName,
@@ -173,8 +178,8 @@ func NewKafkaWorker(workerConfig WorkerConfig, handlers ...handler.Handler) *kaf
 		CommitInterval:         0,
 		PartitionWatchInterval: 5 * time.Second,
 		WatchPartitionChanges:  true,
-		SessionTimeout:         30 * time.Second,
-		RebalanceTimeout:       30 * time.Second,
+		SessionTimeout:         workerConfig.MaxProcessTime + (5 * time.Second),
+		RebalanceTimeout:       workerConfig.MaxProcessTime + (5 * time.Second),
 		RetentionTime:          365 * 24 * time.Hour,
 		StartOffset:            kafka.FirstOffset,
 		ReadBackoffMin:         100 * time.Millisecond,

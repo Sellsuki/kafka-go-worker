@@ -83,7 +83,7 @@ func TestWithForkByPartition(t *testing.T) {
 				Messages:   tt.messages,
 			}
 
-			tt.wantErr(t, c.Start(), fmt.Sprintf("WithForkAll(%v)", c))
+			tt.wantErr(t, c.Start(), fmt.Sprintf("WithForkByPartition(%v)", c))
 
 			for _, hm := range tt.handlerMocks {
 				if hm != nil {

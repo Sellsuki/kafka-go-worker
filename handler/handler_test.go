@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/segmentio/kafka-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -98,7 +99,7 @@ func genMessages(msgs ...mockMessage) []kafka.Message {
 func TestContext_Start(t *testing.T) {
 	tests := []struct {
 		name         string
-		wantErr      bool
+		wantErr      assert.ErrorAssertionFunc
 		handlerMocks []*handlerMock
 		messages     []kafka.Message
 	}{
@@ -106,13 +107,13 @@ func TestContext_Start(t *testing.T) {
 			name:         "no handlers",
 			messages:     genMessages(mockMessage{1, 1, ""}),
 			handlerMocks: nil,
-			wantErr:      true,
+			wantErr:      assert.Error,
 		},
 		{
 			name:         "1 handlers",
 			messages:     genMessages(mockMessage{1, 1, ""}),
 			handlerMocks: []*handlerMock{NewHandlerMock(1)},
-			wantErr:      false,
+			wantErr:      assert.NoError,
 		},
 		{
 			name:     "3 handlers",
@@ -122,7 +123,7 @@ func TestContext_Start(t *testing.T) {
 				NewHandlerMock(1),
 				NewHandlerMock(1),
 			},
-			wantErr: false,
+			wantErr: assert.NoError,
 		},
 	}
 
@@ -135,9 +136,7 @@ func TestContext_Start(t *testing.T) {
 				Messages:   tt.messages,
 			}
 
-			if err := c.Start(); (err != nil) != tt.wantErr {
-				t.Errorf("Start() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			tt.wantErr(t, c.Start(), fmt.Sprintf("Start(%v)", c))
 
 			for _, hm := range tt.handlerMocks {
 				assert.Equal(t, hm.calledCount, hm.expectCallCount)

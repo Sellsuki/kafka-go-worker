@@ -100,7 +100,7 @@ func TestWithForkByKey(t *testing.T) {
 				Messages:   tt.messages,
 			}
 
-			tt.wantErr(t, c.Start(), fmt.Sprintf("WithForkAll(%v)", c))
+			tt.wantErr(t, c.Start(), fmt.Sprintf("WithForkByKey(%v)", c))
 
 			for _, hm := range tt.handlerMocks {
 				if hm != nil {
