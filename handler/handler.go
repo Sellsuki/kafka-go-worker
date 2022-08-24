@@ -4,18 +4,13 @@ import (
 	"context"
 	"errors"
 	"github.com/segmentio/kafka-go"
+	"kafka-go-worker/kafka_consumer"
 	"time"
 )
 
 var (
 	ErrHandlersRequired = errors.New("at-least 1 handler required")
 )
-
-type Consumer interface {
-	CommitMessages(ctx context.Context, msgs ...kafka.Message) error
-	Stats() kafka.ReaderStats
-	Config() kafka.ReaderConfig
-}
 
 type Clock interface {
 	Sleep(time.Duration)
@@ -26,11 +21,11 @@ type Context struct {
 	handlerIdx int
 	handlers   []Handler
 	Messages   []kafka.Message
-	Consumer   Consumer
+	Consumer   kafka_consumer.Consumer
 	//Config     kafka_go_worker.WorkerConfig
 }
 
-func NewContext(ctx context.Context, handlers []Handler, consumer Consumer, messages []kafka.Message) *Context {
+func NewContext(ctx context.Context, handlers []Handler, consumer kafka_consumer.Consumer, messages []kafka.Message) *Context {
 	return &Context{
 		ctx:        ctx,
 		handlerIdx: 0,

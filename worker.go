@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/segmentio/kafka-go"
 	"kafka-go-worker/handler"
+	"kafka-go-worker/kafka_consumer"
 	"math"
 	"time"
 )
@@ -27,7 +28,7 @@ type WorkerConfig struct {
 }
 
 type kafkaWorker struct {
-	consumer   *kafka.Reader
+	consumer   kafka_consumer.Consumer
 	running    bool
 	error      error
 	config     WorkerConfig
