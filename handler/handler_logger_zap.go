@@ -8,7 +8,7 @@ import (
 )
 
 // HandlerLogger is a handler that logs the message and error
-func withLogger(msg string) Handler {
+func withLogger(msg, workerName, topicName string) Handler {
 	return func(c *Context) error {
 		start := time.Now()
 
@@ -17,9 +17,9 @@ func withLogger(msg string) Handler {
 		msgKeys, msgPartition := getLoggerFieldMessagePartitionOffsetAndKeys(c)
 		zap.L().Info(msg,
 			zap.Duration("duration", time.Since(start)),
-			zap.String("worker_name", c.Config.WorkerName),
+			zap.String("worker_name", workerName),
 			zap.Int("message_count", len(c.Messages)),
-			zap.String("topic", c.Config.TopicName),
+			zap.String("topic", topicName),
 			zap.Error(err),
 			msgKeys,
 			msgPartition,

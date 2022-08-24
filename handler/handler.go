@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/segmentio/kafka-go"
-	kafka_consumer_worker "kafka-go-worker"
 	"time"
 )
 
@@ -28,7 +27,7 @@ type Context struct {
 	handlers   []Handler
 	Messages   []kafka.Message
 	Consumer   Consumer
-	Config     kafka_consumer_worker.WorkerConfig
+	//Config     kafka_go_worker.WorkerConfig
 }
 
 func NewContext(ctx context.Context, handlers []Handler, consumer Consumer, messages []kafka.Message) *Context {

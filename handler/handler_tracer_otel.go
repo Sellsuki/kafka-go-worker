@@ -9,7 +9,7 @@ import (
 )
 
 // withOtelTracer Recommended to use this before the worker, due to span context will get override by next message in slice
-func withOtelTracer(packageName, spanName string, resumeTrace ...bool) Handler {
+func withOtelTracer(packageName, spanName, workerName string, resumeTrace ...bool) Handler {
 	tracer := otel.Tracer(packageName)
 
 	return func(c *Context) error {
@@ -37,7 +37,7 @@ func withOtelTracer(packageName, spanName string, resumeTrace ...bool) Handler {
 			trace.WithAttributes(semconv.MessagingKafkaConsumerGroupKey.String(kafkaConfig.GroupID)),
 			//trace.WithAttributes(semconv.MessagingKafkaMessageKeyKey.String()),
 			trace.WithAttributes(semconv.MessagingDestinationKey.String(kafkaStat.Topic)),
-			trace.WithAttributes(attribute.String("worker_name", c.Config.WorkerName)),
+			trace.WithAttributes(attribute.String("worker_name", workerName)),
 			trace.WithSpanKind(trace.SpanKindServer),
 		}
 

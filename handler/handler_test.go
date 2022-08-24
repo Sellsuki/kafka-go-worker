@@ -5,29 +5,10 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"sync"
 	"testing"
 	"time"
 )
-
-const callOrderContextKey = "call_order"
-
-type KafkaConsumerMock struct {
-	mock.Mock
-}
-
-func (m *KafkaConsumerMock) CommitMessages(_ context.Context, _ ...kafka.Message) error {
-	return nil
-}
-
-func (m *KafkaConsumerMock) Stats() kafka.ReaderStats {
-	return kafka.ReaderStats{}
-}
-
-func (m *KafkaConsumerMock) Config() kafka.ReaderConfig {
-	return kafka.ReaderConfig{}
-}
 
 type handlerMock struct {
 	mutex           *sync.Mutex
@@ -51,7 +32,7 @@ func (m *handlerMock) Handle(c *Context) error {
 	return c.Next()
 }
 
-func NewHandlerMock(expectCall int) *handlerMock {
+func newHandlerMock(expectCall int) *handlerMock {
 	h := &handlerMock{
 		mutex:           &sync.Mutex{},
 		expectCallCount: expectCall,
@@ -112,16 +93,16 @@ func TestContext_Start(t *testing.T) {
 		{
 			name:         "1 handlers",
 			messages:     genMessages(mockMessage{1, 1, ""}),
-			handlerMocks: []*handlerMock{NewHandlerMock(1)},
+			handlerMocks: []*handlerMock{newHandlerMock(1)},
 			wantErr:      assert.NoError,
 		},
 		{
 			name:     "3 handlers",
 			messages: genMessages(mockMessage{1, 1, ""}),
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
-				NewHandlerMock(1),
-				NewHandlerMock(1),
+				newHandlerMock(1),
+				newHandlerMock(1),
+				newHandlerMock(1),
 			},
 			wantErr: assert.NoError,
 		},

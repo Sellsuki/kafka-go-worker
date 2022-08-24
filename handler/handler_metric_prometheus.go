@@ -3,7 +3,6 @@ package handler
 import (
 	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
-	kafka_go_worker "kafka-go-worker"
 	"time"
 )
 
@@ -13,10 +12,10 @@ type consumerLabel struct {
 	messageCount int
 }
 
-func withPrometheusMetric(prefix string, prom *prometheus.Registry, config kafka_go_worker.WorkerConfig) Handler {
+func withPrometheusMetric(prefix string, prom *prometheus.Registry, workerName, topic string, batchSize int) Handler {
 	labels := prometheus.Labels{
-		"worker_name": config.WorkerName,
-		"topic":       config.TopicName,
+		"worker_name": workerName,
+		"topic":       topic,
 	}
 
 	messagesTotal := prometheus.NewCounterVec(prometheus.CounterOpts{
@@ -33,7 +32,7 @@ func withPrometheusMetric(prefix string, prom *prometheus.Registry, config kafka
 
 	prom.MustRegister(messagesTotal, processDuration)
 
-	chRequestFinish := make(chan consumerLabel, config.BatchSize)
+	chRequestFinish := make(chan consumerLabel, batchSize)
 
 	go func() {
 		for {

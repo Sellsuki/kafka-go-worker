@@ -18,9 +18,9 @@ func TestWithForkAll(t *testing.T) {
 		{
 			name: "fork all",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(3),
+				newHandlerMock(3),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, ""},
@@ -32,11 +32,11 @@ func TestWithForkAll(t *testing.T) {
 		{
 			name: "fork multiple time",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(5),
+				newHandlerMock(5),
 				nil,
-				NewHandlerMock(5),
+				newHandlerMock(5),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, ""},

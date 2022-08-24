@@ -18,9 +18,9 @@ func TestWithForkByKey(t *testing.T) {
 		{
 			name: "same key",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(1),
+				newHandlerMock(1),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},
@@ -32,9 +32,9 @@ func TestWithForkByKey(t *testing.T) {
 		{
 			name: "2 keys",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(2),
+				newHandlerMock(2),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},
@@ -49,11 +49,11 @@ func TestWithForkByKey(t *testing.T) {
 		{
 			name: "redundant",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(2),
+				newHandlerMock(2),
 				nil,
-				NewHandlerMock(2),
+				newHandlerMock(2),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},
@@ -68,9 +68,9 @@ func TestWithForkByKey(t *testing.T) {
 		{
 			name: "all different",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(6),
+				newHandlerMock(6),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},

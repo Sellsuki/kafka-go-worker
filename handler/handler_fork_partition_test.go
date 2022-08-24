@@ -18,9 +18,9 @@ func TestWithForkByPartition(t *testing.T) {
 		{
 			name: "same partition",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(1),
+				newHandlerMock(1),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},
@@ -32,9 +32,9 @@ func TestWithForkByPartition(t *testing.T) {
 		{
 			name: "3 partitions",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1), // before fork
+				newHandlerMock(1), // before fork
 				nil,
-				NewHandlerMock(3), // after fork
+				newHandlerMock(3), // after fork
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},
@@ -49,11 +49,11 @@ func TestWithForkByPartition(t *testing.T) {
 		{
 			name: "redundant",
 			handlerMocks: []*handlerMock{
-				NewHandlerMock(1),
+				newHandlerMock(1),
 				nil,
-				NewHandlerMock(3),
+				newHandlerMock(3),
 				nil,
-				NewHandlerMock(3),
+				newHandlerMock(3),
 			},
 			messages: genMessages(
 				mockMessage{1, 1, "foo"},
