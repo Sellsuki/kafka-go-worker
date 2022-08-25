@@ -8,8 +8,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// withOtelTracer Recommended to use this before the worker, due to span context will get override by next message in slice
-func withOtelTracer(packageName, spanName, workerName string, resumeTrace ...bool) Handler {
+// WithTracerOtel Recommended to use this before the worker, due to span context will get override by next message in slice
+func WithTracerOtel(packageName, spanName, workerName string, resumeTrace ...bool) Handler {
 	tracer := otel.Tracer(packageName)
 
 	return func(c *Context) error {

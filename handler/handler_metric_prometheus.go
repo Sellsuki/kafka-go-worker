@@ -12,7 +12,7 @@ type consumerLabel struct {
 	messageCount int
 }
 
-func withPrometheusMetric(prefix string, prom *prometheus.Registry, workerName, topic string, batchSize int) Handler {
+func WithMetricPrometheus(prefix string, prom *prometheus.Registry, workerName, topic string, batchSize int) Handler {
 	labels := prometheus.Labels{
 		"worker_name": workerName,
 		"topic":       topic,

@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// HandlerLogger is a handler that logs the message and error
-func withLogger(msg, workerName, topicName string) Handler {
+// WithLoggerZap is a handler that logs the message and error
+func WithLoggerZap(msg, workerName, topicName string) Handler {
 	return func(c *Context) error {
 		start := time.Now()
 

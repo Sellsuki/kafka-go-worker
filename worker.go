@@ -27,6 +27,28 @@ type WorkerConfig struct {
 	MaxProcessTime  time.Duration
 }
 
+func (w *WorkerConfig) SetDefault() {
+	if w.BackoffDelay <= 0 {
+		w.BackoffDelay = 1 * time.Second
+	}
+
+	if w.MaxBackoffDelay <= 0 {
+		w.MaxBackoffDelay = 30 * time.Second
+	}
+
+	if w.MaxWait <= 0 {
+		w.MaxWait = 1 * time.Second
+	}
+
+	if w.BatchSize <= 0 {
+		w.BatchSize = 100
+	}
+
+	if w.MaxProcessTime <= 0 {
+		w.MaxProcessTime = 30 * time.Second
+	}
+}
+
 type kafkaWorker struct {
 	consumer   kafka_consumer.Consumer
 	running    bool
@@ -145,28 +167,21 @@ func (k *kafkaWorker) pull() ([]kafka.Message, error) {
 	}
 }
 
+func NewKafkaWorkerWithCustomer(workerConfig WorkerConfig, customer *kafka.Reader, handlers ...handler.Handler) *kafkaWorker {
+	workerConfig.SetDefault()
+
+	return &kafkaWorker{
+		consumer: customer,
+		running:  false,
+		error:    nil,
+		config:   workerConfig,
+		handlers: handlers,
+	}
+}
+
 func NewKafkaWorker(workerConfig WorkerConfig, handlers ...handler.Handler) *kafkaWorker {
-	if workerConfig.BackoffDelay <= 0 {
-		workerConfig.BackoffDelay = 1 * time.Second
-	}
-
-	if workerConfig.MaxBackoffDelay <= 0 {
-		workerConfig.MaxBackoffDelay = 30 * time.Second
-	}
-
-	if workerConfig.MaxWait <= 0 {
-		workerConfig.MaxWait = 1 * time.Second
-	}
-
-	if workerConfig.BatchSize <= 0 {
-		workerConfig.BatchSize = 100
-	}
-
-	if workerConfig.MaxProcessTime <= 0 {
-		workerConfig.MaxProcessTime = 30 * time.Second
-	}
-
-	reader := kafka.NewReader(kafka.ReaderConfig{
+	workerConfig.SetDefault()
+	customer := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:                workerConfig.KafkaBrokers,
 		GroupID:                workerConfig.WorkerName,
 		Topic:                  workerConfig.TopicName,
@@ -190,7 +205,7 @@ func NewKafkaWorker(workerConfig WorkerConfig, handlers ...handler.Handler) *kaf
 	})
 
 	return &kafkaWorker{
-		consumer: reader,
+		consumer: customer,
 		running:  false,
 		error:    nil,
 		config:   workerConfig,
