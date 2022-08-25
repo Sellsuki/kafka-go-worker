@@ -3,8 +3,8 @@ package example
 import (
 	"context"
 	"fmt"
-	kafka_consumer_worker "kafka-go-worker"
-	"kafka-go-worker/handler"
+	kafka_consumer_worker "github.com/sellsuki/kafka-go-worker"
+	"github.com/sellsuki/kafka-go-worker/handler"
 	"testing"
 )
 

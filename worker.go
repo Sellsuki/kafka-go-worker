@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/segmentio/kafka-go"
-	"kafka-go-worker/handler"
-	"kafka-go-worker/kafka_consumer"
+	"github.com/sellsuki/kafka-go-worker/handler"
+	"github.com/sellsuki/kafka-go-worker/kafka_consumer"
 	"math"
 	"time"
 )

@@ -1,4 +1,4 @@
-module kafka-go-worker
+module github.com/sellsuki/kafka-go-worker
 
 go 1.18
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/segmentio/kafka-go"
-	"kafka-go-worker/kafka_consumer"
+	"github.com/sellsuki/kafka-go-worker/kafka_consumer"
 	"time"
 )
 
