@@ -27,7 +27,7 @@ go get github.com/Sellsuki/kafka-go-worker
 ### 01 Simple worker
 Received message in batch, process message 1 by 1 until all messages processed then commit ALL message in batch if some messages failed it still got COMMITTED Use case generic kafka pipeline, need handle failed message later without blocking the stream
  - Order: yes
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: Poor
  - Idempotent Worker: Required
  - UseCase: Generic kafka worker and single core ?
@@ -46,7 +46,7 @@ Similar to Example1 But included graceful shutdown, and readiness probe
 ### 03 Partition concurrent
 Received message in batch, fork each partition into separate thread, Each partition will process message in serial (ordered), and commit once per partition,Use case similar to Example 1, but have better process speed, due to concurrency
  - Order: yes (Partition)
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: Good
  - Idempotent Worker: Required
  - UseCase: Generic kafka worker, limited by partition number
@@ -58,7 +58,7 @@ Received message in batch, fork each partition into separate thread, Each partit
 ### 04 Parallel worker
 Received message in batch, process all message at the same time, once all message processed, commit all messages.
  - Order: NO
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: Best
  - Idempotent Worker: Required
  - UseCase: Process that want to complete as fast as possible, and don't need to be ORDERED, e.g. Logging, Broadcasting
@@ -70,7 +70,7 @@ Received message in batch, process all message at the same time, once all messag
 ### 05 Key concurrent
 Received message in batch, fork each `KEY` into separate thread, Each `KEY` will process message in serial (ordered), and commit once per partition, Use case similar to Example 1, but have better process speed, due to concurrency
  - Order: yes (Message.Key)
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: Good+
  - Idempotent Worker: Required
  - UseCase: Generic kafka worker, limited by partition number
@@ -106,7 +106,7 @@ Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker&operati
 ### 08 Concurrent limiter
 Fork all message into each thread, but limit maximum concurrent to `2` workers
  - Order: NO
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: Good++
  - Idempotent Worker: Required
  - UseCase: Parallel worker that have resource constraint
@@ -120,7 +120,7 @@ Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker&operati
 ### 09 Partition concurrent limit
 Only allow `1` partition process at a time and limit workers to `3` (by key)
  - Order: yes (Message.Key)
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: Good+
  - Idempotent Worker: Required
  - UseCase: Parallel Key worker that have resource constraint
@@ -134,7 +134,7 @@ Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker&operati
 ### 10 Exactly once
 Only allow `1` partition process at a time, then commit 1 message at a time
  - Order: yes (Message.Key)
- - Worker Process Failed: handle it manually (logging ?)
+ - Worker Process Failed: handle it manually later (logging error, then reload all message since error, or fix data directly ?)
  - Speed: POOR-
  - Idempotent Worker: No need (worker use database transaction)
  - UseCase: Job that need to process once and cannot be `reverse` or `compensate`
