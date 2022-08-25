@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"github.com/segmentio/kafka-go"
 	"github.com/stretchr/testify/mock"
 	"log"
@@ -10,6 +11,10 @@ import (
 
 const commitMessagesMethodName = "CommitMessages"
 const workerProcessorMethodName = "Processor"
+
+var (
+	ErrWorkerMock1 = errors.New("error worker mock 1")
+)
 
 type kafkaConsumerMock struct {
 	mock.Mock
@@ -60,8 +65,6 @@ func newKafkaConsumerMock() *kafkaConsumerMock {
 
 func newWorkerMock() *workerMock {
 	w := new(workerMock)
-
-	w.On(workerProcessorMethodName, mock.Anything, mock.Anything).Return(nil)
 
 	return w
 }
