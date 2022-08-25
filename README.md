@@ -5,7 +5,7 @@ A kafka' pipeline framework build on to of [kafka-go](https://github.com/segment
 
 ## Install
 ```shell
-go get github.com/Sellsuki/kafka-go-worker
+go get github.com/sellsuki/kafka-go-worker
 ```
 
 ## Example
