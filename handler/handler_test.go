@@ -47,6 +47,7 @@ type mockMessage struct {
 	partition int
 	offset    int64
 	key       string
+	value     string
 }
 
 func genMessages(msgs ...mockMessage) []kafka.Message {
@@ -59,7 +60,7 @@ func genMessages(msgs ...mockMessage) []kafka.Message {
 			Key:       []byte(m.key),
 			Offset:    m.offset,
 			Headers:   nil,
-			Value:     []byte("bar"),
+			Value:     []byte(m.value),
 			Time:      time.Now(),
 		})
 	}
@@ -76,19 +77,19 @@ func TestContext_Start(t *testing.T) {
 	}{
 		{
 			name:         "no handlers",
-			messages:     genMessages(mockMessage{1, 1, ""}),
+			messages:     genMessages(mockMessage{1, 1, "", ""}),
 			handlerMocks: nil,
 			wantErr:      assert.Error,
 		},
 		{
 			name:         "1 handlers",
-			messages:     genMessages(mockMessage{1, 1, ""}),
+			messages:     genMessages(mockMessage{1, 1, "", ""}),
 			handlerMocks: []*handlerMock{newHandlerMock(1)},
 			wantErr:      assert.NoError,
 		},
 		{
 			name:     "3 handlers",
-			messages: genMessages(mockMessage{1, 1, ""}),
+			messages: genMessages(mockMessage{1, 1, "", ""}),
 			handlerMocks: []*handlerMock{
 				newHandlerMock(1),
 				newHandlerMock(1),
