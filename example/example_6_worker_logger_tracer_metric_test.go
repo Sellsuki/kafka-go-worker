@@ -25,7 +25,7 @@ func Test_Example_6(t *testing.T) {
 			),
 			handler.WithTracerOtel(
 				"kafka_consumer_worker",
-				"kafka_consumer_worker_example_5_worker",
+				"kafka_consumer_worker_example_6_worker",
 				workerConfig.WorkerName,
 				true,
 			),

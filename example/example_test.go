@@ -24,6 +24,7 @@ import (
 
 const jaegerCollectorEndpoint = "http://localhost:14268/api/traces"
 
+// This config for example only
 var workerConfig = kafka_consumer_worker.WorkerConfig{
 	TopicName:       "topic_name",
 	WorkerName:      "worker_name",
@@ -31,8 +32,8 @@ var workerConfig = kafka_consumer_worker.WorkerConfig{
 	BatchSize:       10, // The batch number
 	MaxWait:         1 * time.Second,
 	BackoffDelay:    time.Second,
-	MaxBackoffDelay: time.Minute,
-	MaxProcessTime:  time.Minute,
+	MaxBackoffDelay: 10 * time.Second,
+	MaxProcessTime:  10 * time.Second,
 }
 var prom = prometheus.NewRegistry()
 var tracer = otel.Tracer("namespace_here")

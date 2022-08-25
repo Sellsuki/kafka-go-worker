@@ -68,7 +68,7 @@ metric (https://github.com/prometheus/client_golang)
 
 `go test -v -run Test_Example_6 ./example`
 
-Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker
+Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker&operation=kafka_consumer_worker_example_6_worker
 
 ### 07 Batch + Worker Logging, Tracing, Metric
 Batch + Worker level tracing
@@ -78,5 +78,5 @@ metric (https://github.com/prometheus/client_golang)
 
 `go test -v -run Test_Example_7 ./example`
 
-Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker
-v
+Trace: http://localhost:16686/search?&limit=20&service=demo-kafka-worker&operation=kafka_consumer_worker_example_7
+
