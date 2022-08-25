@@ -5,39 +5,29 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"github.com/stretchr/testify/assert"
-	"sync"
+	"github.com/stretchr/testify/mock"
 	"testing"
 	"time"
 )
 
+const handlerMockMethod = "Handle"
+
 type handlerMock struct {
-	mutex           *sync.Mutex
+	mock.Mock
 	expectCallCount int
-	calledCount     int
-}
-
-func (m *handlerMock) reset() {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
-
-	m.calledCount = 0
 }
 
 func (m *handlerMock) Handle(c *Context) error {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
-
-	m.calledCount++
-
+	m.Called(c)
 	return c.Next()
 }
 
 func newHandlerMock(expectCall int) *handlerMock {
 	h := &handlerMock{
-		mutex:           &sync.Mutex{},
 		expectCallCount: expectCall,
-		calledCount:     0,
 	}
+
+	h.On(handlerMockMethod, mock.Anything).Return(nil)
 
 	return h
 }
@@ -120,7 +110,7 @@ func TestContext_Start(t *testing.T) {
 			tt.wantErr(t, c.Start(), fmt.Sprintf("Start(%v)", c))
 
 			for _, hm := range tt.handlerMocks {
-				assert.Equal(t, hm.calledCount, hm.expectCallCount)
+				hm.AssertNumberOfCalls(t, handlerMockMethod, hm.expectCallCount)
 			}
 		})
 	}

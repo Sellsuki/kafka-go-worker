@@ -69,7 +69,7 @@ func TestWithForkAll(t *testing.T) {
 
 			for _, hm := range tt.handlerMocks {
 				if hm != nil {
-					assert.Equal(t, hm.expectCallCount, hm.calledCount)
+					hm.AssertNumberOfCalls(t, handlerMockMethod, hm.expectCallCount)
 				}
 			}
 		})

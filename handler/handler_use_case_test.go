@@ -66,8 +66,8 @@ func TestContext_UseCase_Simple(t *testing.T) {
 
 	assert.NoError(t, c.Start())
 
-	assert.Equal(t, m1.expectCallCount, m1.calledCount)
-	assert.Equal(t, mWorker.expectCallCount, mWorker.calledCount)
+	m1.AssertNumberOfCalls(t, handlerMockMethod, m1.expectCallCount)
+	mWorker.AssertNumberOfCalls(t, handlerMockMethod, mWorker.expectCallCount)
 }
 
 func TestContext_UseCase_Concurrent_Partition(t *testing.T) {
@@ -101,9 +101,9 @@ func TestContext_UseCase_Concurrent_Partition(t *testing.T) {
 
 	assert.NoError(t, c.Start())
 
-	assert.Equal(t, m1.expectCallCount, m1.calledCount)
-	assert.Equal(t, m2.expectCallCount, m2.calledCount)
-	assert.Equal(t, mWorker.expectCallCount, mWorker.calledCount)
+	m1.AssertNumberOfCalls(t, handlerMockMethod, m1.expectCallCount)
+	m2.AssertNumberOfCalls(t, handlerMockMethod, m2.expectCallCount)
+	mWorker.AssertNumberOfCalls(t, handlerMockMethod, mWorker.expectCallCount)
 
 	cm.AssertCalled(t, commitMessagesMethodName, mock.Anything, []kafka.Message{
 		msgs[0], msgs[2], msgs[3], msgs[5],
@@ -144,9 +144,9 @@ func TestContext_UseCase_Concurrent_Key(t *testing.T) {
 
 	assert.NoError(t, c.Start())
 
-	assert.Equal(t, m1.expectCallCount, m1.calledCount)
-	assert.Equal(t, m2.expectCallCount, m2.calledCount)
-	assert.Equal(t, mWorker.expectCallCount, mWorker.calledCount)
+	m1.AssertNumberOfCalls(t, handlerMockMethod, m1.expectCallCount)
+	m2.AssertNumberOfCalls(t, handlerMockMethod, m2.expectCallCount)
+	mWorker.AssertNumberOfCalls(t, handlerMockMethod, mWorker.expectCallCount)
 
 	cm.AssertCalled(t, commitMessagesMethodName, mock.Anything, msgs)
 	cm.AssertNumberOfCalls(t, commitMessagesMethodName, 1)
