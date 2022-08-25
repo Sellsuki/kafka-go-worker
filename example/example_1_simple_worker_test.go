@@ -2,7 +2,7 @@ package example
 
 import (
 	"context"
-	kafka_consumer_worker "github.com/sellsuki/kafka-go-worker"
+	kafka_go_worker "github.com/sellsuki/kafka-go-worker"
 	"github.com/sellsuki/kafka-go-worker/handler"
 	"testing"
 )
@@ -14,7 +14,7 @@ import (
 // Use case generic kafka pipeline, need handle failed message later without blocking the stream
 func Test_Example_1(t *testing.T) {
 	initLogger()
-	worker := kafka_consumer_worker.NewKafkaWorker(workerConfig,
+	worker := kafka_go_worker.NewKafkaWorker(workerConfig,
 		handler.WithAtLeastOnceCommitter,
 		handler.WithSerialWorker(demoWorker, false, handler.WithRecovery),
 	)

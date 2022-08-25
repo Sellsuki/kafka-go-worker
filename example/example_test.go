@@ -7,7 +7,7 @@ import (
 	"errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/segmentio/kafka-go"
-	kafka_consumer_worker "github.com/sellsuki/kafka-go-worker"
+	kafka_go_worker "github.com/sellsuki/kafka-go-worker"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -25,7 +25,7 @@ import (
 const jaegerCollectorEndpoint = "http://localhost:14268/api/traces"
 
 // This config for example only
-var workerConfig = kafka_consumer_worker.WorkerConfig{
+var workerConfig = kafka_go_worker.WorkerConfig{
 	TopicName:       "topic_name",
 	WorkerName:      "worker_name",
 	KafkaBrokers:    []string{"127.0.0.1:9092"},

@@ -2,7 +2,7 @@ package example
 
 import (
 	"context"
-	kafka_consumer_worker "github.com/sellsuki/kafka-go-worker"
+	kafka_go_worker "github.com/sellsuki/kafka-go-worker"
 	"github.com/sellsuki/kafka-go-worker/handler"
 	"testing"
 )
@@ -10,7 +10,7 @@ import (
 func Test_Example_5(t *testing.T) {
 	initLogger()
 
-	worker := kafka_consumer_worker.NewKafkaWorker(workerConfig,
+	worker := kafka_go_worker.NewKafkaWorker(workerConfig,
 		handler.WithForkByPartition,
 		handler.WithAtLeastOnceCommitter,
 		handler.WithForkByKey,

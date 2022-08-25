@@ -1,4 +1,4 @@
-package kafka_consumer_worker
+package kafka_go_worker
 
 import (
 	"context"
