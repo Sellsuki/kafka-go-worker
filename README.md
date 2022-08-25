@@ -81,9 +81,9 @@ Received message in batch, fork each `KEY` into separate thread, Each `KEY` will
 
 ### 06 Worker's Logging, Tracing, Metric
 Worker level tracing
-logging (https://github.com/uber-go/zap)
-tracing (https://github.com/open-telemetry/opentelemetry-go)
-metric (https://github.com/prometheus/client_golang)
+- logging (https://github.com/uber-go/zap)
+- tracing (https://github.com/open-telemetry/opentelemetry-go)
+- metric (https://github.com/prometheus/client_golang)
 
 [./example/example_6_worker_logger_tracer_metric_test.go](./example/example_6_worker_logger_tracer_metric_test.go)
 
