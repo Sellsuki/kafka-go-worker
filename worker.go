@@ -116,7 +116,7 @@ func (k *kafkaWorker) Start(ctx context.Context) error {
 		// Start until context is cancelled
 		if err := ctx.Err(); err != nil {
 			//zap.L().Info("kafka worker shutdown", zap.String("name", k.config.WorkerName))
-			return nil
+			return k.consumer.Close()
 		}
 
 		messages, err := k.pull()

@@ -10,4 +10,5 @@ type Consumer interface {
 	Stats() kafka.ReaderStats
 	Config() kafka.ReaderConfig
 	FetchMessage(ctx context.Context) (kafka.Message, error)
+	Close() error
 }

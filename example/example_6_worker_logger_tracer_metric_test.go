@@ -18,7 +18,7 @@ func Test_Example_6(t *testing.T) {
 			handler.WithRecovery,
 			handler.WithLoggerZap("worker_process", workerConfig.WorkerName, workerConfig.TopicName),
 			handler.WithMetricPrometheus(
-				fmt.Sprintf("worker: %s", workerConfig.WorkerName),
+				fmt.Sprintf("worker_%s", workerConfig.WorkerName),
 				prom, workerConfig.WorkerName,
 				workerConfig.TopicName,
 				workerConfig.BatchSize,

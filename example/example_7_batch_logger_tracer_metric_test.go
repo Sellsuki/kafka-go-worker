@@ -15,7 +15,7 @@ func Test_Example_7(t *testing.T) {
 	worker := kafka_consumer_worker.NewKafkaWorker(workerConfig,
 		handler.WithLoggerZap("batch_process", workerConfig.WorkerName, workerConfig.TopicName),
 		handler.WithMetricPrometheus(
-			fmt.Sprintf("worker: %s", workerConfig.WorkerName),
+			fmt.Sprintf("worker_%s", workerConfig.WorkerName),
 			prom, workerConfig.WorkerName,
 			workerConfig.TopicName,
 			workerConfig.BatchSize,
@@ -31,7 +31,7 @@ func Test_Example_7(t *testing.T) {
 			handler.WithRecovery,
 			handler.WithLoggerZap("worker_process", workerConfig.WorkerName, workerConfig.TopicName),
 			handler.WithMetricPrometheus(
-				fmt.Sprintf("worker: %s", workerConfig.WorkerName),
+				fmt.Sprintf("worker_%s", workerConfig.WorkerName),
 				prom, workerConfig.WorkerName,
 				workerConfig.TopicName,
 				workerConfig.BatchSize,

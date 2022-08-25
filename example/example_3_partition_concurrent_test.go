@@ -9,7 +9,7 @@ import (
 
 // Test_Example_3 Partition Concurrent
 // Received message in batch, fork each partition into separate thread
-// Each partition will message in serial (ordered), and get commit separately
+// Each partition will process message in serial (ordered), and commit once per partition
 // Use case similar to Example 1, but have better process speed, due to concurrency
 func Test_Example_3(t *testing.T) {
 	initLogger()

@@ -13,7 +13,7 @@ import (
 	"go.opentelemetry.io/otel/exporters/jaeger"
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
-	"go.opentelemetry.io/otel/semconv/v1.7.0"
+	"go.opentelemetry.io/otel/semconv/v1.12.0"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	kafka_consumer_worker "kafka-go-worker"
@@ -21,6 +21,8 @@ import (
 	"math/rand"
 	"time"
 )
+
+const jaegerCollectorEndpoint = "http://localhost:14268/api/traces"
 
 var workerConfig = kafka_consumer_worker.WorkerConfig{
 	TopicName:       "topic_name",
@@ -55,7 +57,7 @@ func initLogger() {
 }
 
 func initTracer() {
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint("http://localhost:14268/api/traces")))
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(jaegerCollectorEndpoint)))
 	if err != nil {
 		zap.L().Fatal("Error init Jaeger exporter", zap.Error(err))
 	}

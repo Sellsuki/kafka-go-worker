@@ -37,6 +37,10 @@ func (m *kafkaConsumerMock) Config() kafka.ReaderConfig {
 	return kafka.ReaderConfig{}
 }
 
+func (m *kafkaConsumerMock) Close() error {
+	return nil
+}
+
 type workerMock struct {
 	mock.Mock
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func Test_Seed_Kafka(t *testing.T) {
-	conn, err := kafka.Dial("tcp", "localhost:9092")
+	conn, err := kafka.Dial("tcp", workerConfig.KafkaBrokers[0])
 	if err != nil {
 		t.Error(err)
 		return
