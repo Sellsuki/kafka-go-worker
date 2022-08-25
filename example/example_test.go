@@ -36,7 +36,7 @@ var workerConfig = kafka_consumer_worker.WorkerConfig{
 	MaxProcessTime:  10 * time.Second,
 }
 var prom = prometheus.NewRegistry()
-var tracer = otel.Tracer("namespace_here")
+var tracer = otel.Tracer("project_name")
 
 func initLogger() {
 	config := zap.NewProductionConfig()
@@ -105,6 +105,8 @@ func loopPrintMetric() {
 func demoWorker(ctx context.Context, msg kafka.Message) error {
 	zap.L().Info("Received message", zap.String("topic", msg.Topic), zap.Int("partition", msg.Partition), zap.Int64("offset", msg.Offset), zap.ByteString("key", msg.Key), zap.ByteString("payload", msg.Value))
 
+	// You can Implement your own tracing
+	// If You use `WithTracerOtel` span context will automatically inject into ctx
 	ctx, span := tracer.Start(ctx, "demoWorker")
 	defer span.End()
 	span.SetAttributes(semconv.MessagingDestinationKey.String(msg.Topic))

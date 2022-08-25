@@ -21,6 +21,7 @@ func Test_Example_9(t *testing.T) {
 		handler.WithForkByPartition,
 		handler.WithAtLeastOnceCommitter,
 		handler.WithConcurrentLimiter(1),
+		handler.WithForkByKey,
 		handler.WithSerialWorker(demoWorker, false,
 			handler.WithRecovery,
 			handler.WithConcurrentLimiter(3),
