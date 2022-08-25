@@ -17,8 +17,9 @@ func Test_Seed_Kafka(t *testing.T) {
 	}
 
 	err = conn.CreateTopics(kafka.TopicConfig{
-		Topic:         workerConfig.TopicName,
-		NumPartitions: 3,
+		Topic:             workerConfig.TopicName,
+		NumPartitions:     3,
+		ReplicationFactor: -1,
 	})
 	if err != nil {
 		t.Error(err)

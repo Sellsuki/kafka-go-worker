@@ -1,15 +1,6 @@
 version: "2"
 
 services:
-  mongodb:
-    image: mongo:4.4
-    ports:
-      - "27017:27017"
-    volumes:
-      - "mongo_data:/data/db"
-    restart: always
-    networks:
-      - default
   zookeeper:
     image: docker.io/bitnami/zookeeper:3.8
     ports:
@@ -42,6 +33,4 @@ volumes:
   zookeeper_data:
     driver: local
   kafka_data:
-    driver: local
-  mongo_data:
     driver: local
