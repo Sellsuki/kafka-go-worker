@@ -6,10 +6,11 @@ import (
 	"os"
 	"os/signal"
 	"sync"
+	"syscall"
 )
 
 type KafkaWorkerManager struct {
-	workers []*kafkaWorker
+	workers []*KafkaWorker
 }
 
 // Start all workers
@@ -20,7 +21,7 @@ func (k KafkaWorkerManager) Start() []error {
 	// Wait for OS SIGINT/SIGTERM then gracefully shutdown the workers
 	{
 		exit := make(chan os.Signal, 1)
-		signal.Notify(exit, os.Interrupt, os.Kill)
+		signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
 		go func() {
 			<-exit
 			cancel()
@@ -30,7 +31,7 @@ func (k KafkaWorkerManager) Start() []error {
 	errs := make([]error, len(k.workers))
 	for i, worker := range k.workers {
 		wg.Add(1)
-		go func(worker *kafkaWorker, i int) {
+		go func(worker *KafkaWorker, i int) {
 			defer wg.Done()
 			errs[i] = worker.Start(ctx)
 		}(worker, i)
@@ -51,7 +52,7 @@ func (k KafkaWorkerManager) Health() error {
 	return nil
 }
 
-func NewWorkerManager(workers ...*kafkaWorker) *KafkaWorkerManager {
+func NewWorkerManager(workers ...*KafkaWorker) *KafkaWorkerManager {
 	return &KafkaWorkerManager{
 		workers: workers,
 	}
