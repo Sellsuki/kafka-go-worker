@@ -11,10 +11,11 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/sdk/resource"
-	"go.opentelemetry.io/otel/sdk/trace"
-	"go.opentelemetry.io/otel/semconv/v1.12.0"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/semconv/v1.21.0"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
@@ -58,29 +59,21 @@ func initLogger() {
 }
 
 func initTracer() {
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(jaegerCollectorEndpoint)))
+
+	client := otlptracehttp.NewClient(otlptracehttp.WithEndpoint(jaegerCollectorEndpoint))
+	exporter, err := otlptrace.New(context.Background(), client)
 	if err != nil {
-		zap.L().Fatal("Error init Jaeger exporter", zap.Error(err))
+		zap.L().Fatal("Error init OTLP exporter", zap.Error(err))
 	}
 
-	r, err := resource.Merge(
-		resource.Default(),
-		resource.NewWithAttributes(
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithBatcher(exporter),
+		sdktrace.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String("demo-kafka-worker"),
-			semconv.ServiceVersionKey.String("v0.0.0"),
+			semconv.ServiceName("demo-kafka-worker"),
+			semconv.ServiceVersion("v0.0.0"),
 			attribute.String("environment", "demo"),
-		),
-	)
-	if err != nil {
-		zap.L().Fatal("Error init Jaeger resource", zap.Error(err))
-	}
-
-	tp := trace.NewTracerProvider(
-		// Always be sure to batch in production.
-		trace.WithBatcher(exp),
-		// Record information about this application in a Resource.
-		trace.WithResource(r),
+		)),
 	)
 
 	otel.SetTracerProvider(tp)
@@ -109,8 +102,8 @@ func demoWorker(ctx context.Context, msg kafka.Message) error {
 	// If You use `WithTracerOtel` span context will automatically inject into ctx
 	ctx, span := tracer.Start(ctx, "demoWorker")
 	defer span.End()
-	span.SetAttributes(semconv.MessagingDestinationKey.String(msg.Topic))
-	span.SetAttributes(semconv.MessagingKafkaPartitionKey.Int(msg.Partition))
+	span.SetAttributes(semconv.MessagingDestinationName(msg.Topic))
+	span.SetAttributes(semconv.MessagingKafkaDestinationPartition(msg.Partition))
 	span.SetAttributes(attribute.Int64("offset", msg.Offset))
 	span.SetAttributes(semconv.MessagingKafkaMessageKeyKey.String(string(msg.Key)))
 
