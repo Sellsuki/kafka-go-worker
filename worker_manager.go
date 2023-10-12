@@ -14,8 +14,10 @@ type KafkaWorkerManager struct {
 }
 
 // Start all workers
-func (k KafkaWorkerManager) Start() []error {
-	wg := sync.WaitGroup{}
+func (k KafkaWorkerManager) Start(wg *sync.WaitGroup) []error {
+	if wg == nil {
+		wg = &sync.WaitGroup{}
+	}
 	ctx, cancel := context.WithCancel(context.Background())
 
 	// Wait for OS SIGINT/SIGTERM then gracefully shutdown the workers
