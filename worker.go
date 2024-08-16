@@ -2,6 +2,7 @@ package kafka_go_worker
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"github.com/segmentio/kafka-go"
 	"github.com/sellsuki/kafka-go-worker/handler"
@@ -25,6 +26,8 @@ type WorkerConfig struct {
 	BackoffDelay    time.Duration
 	MaxBackoffDelay time.Duration
 	MaxProcessTime  time.Duration
+	UseTLS          bool
+	TLSSkipVerify   bool
 }
 
 func (w *WorkerConfig) SetDefault() {
@@ -181,7 +184,7 @@ func NewKafkaWorkerWithCustomer(workerConfig WorkerConfig, customer *kafka.Reade
 
 func NewKafkaWorker(workerConfig WorkerConfig, handlers ...handler.Handler) *KafkaWorker {
 	workerConfig.SetDefault()
-	customer := kafka.NewReader(kafka.ReaderConfig{
+	config := kafka.ReaderConfig{
 		Brokers:                workerConfig.KafkaBrokers,
 		GroupID:                workerConfig.WorkerName,
 		Topic:                  workerConfig.TopicName,
@@ -202,10 +205,17 @@ func NewKafkaWorker(workerConfig WorkerConfig, handlers ...handler.Handler) *Kaf
 		ReadBackoffMax:         1 * time.Second,
 		MaxAttempts:            5,
 		GroupBalancers:         []kafka.GroupBalancer{kafka.RangeGroupBalancer{}, kafka.RoundRobinGroupBalancer{}}, // kafka-go did not support sticky group balancer :(
-	})
+	}
+
+	if workerConfig.UseTLS {
+		config.Dialer = &kafka.Dialer{
+			TLS: &tls.Config{},
+		}
+		config.Dialer.TLS.InsecureSkipVerify = workerConfig.TLSSkipVerify
+	}
 
 	return &KafkaWorker{
-		consumer: customer,
+		consumer: kafka.NewReader(config),
 		running:  false,
 		error:    nil,
 		config:   workerConfig,
